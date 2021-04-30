@@ -48,6 +48,8 @@ class HomeFragment : BaseFragment() {
             }
         }
 
+        notesAdapter.setOnClickListener(onClicked)
+
         binding.fabBtnCreateNote.setOnClickListener {
             replaceFragment(CreateNoteFragment(),false)
         }
@@ -71,6 +73,20 @@ class HomeFragment : BaseFragment() {
                 return true
             }
         })
+    }
+
+    private val onClicked = object : NotesAdapter.OnItemClickListener{
+        override fun onClicked(notesId: Int) {
+
+
+            var fragment :Fragment
+            var bundle = Bundle()
+            bundle.putInt("noteId",notesId)
+            fragment = CreateNoteFragment()
+            fragment.arguments = bundle
+
+            replaceFragment(fragment,false)
+        }
     }
 
     private fun replaceFragment(fragment:Fragment, istransition:Boolean){

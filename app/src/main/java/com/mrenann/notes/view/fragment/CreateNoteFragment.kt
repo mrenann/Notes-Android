@@ -17,10 +17,18 @@ import java.util.*
 
 class CreateNoteFragment : BaseFragment() {
     private lateinit var binding: FragmentCreateNoteBinding
+    var selectedColor = "#171C26"
     var currentDate:String? = null
+    private var READ_STORAGE_PERM = 123
+    private var REQUEST_CODE_IMAGE = 456
+    private var selectedImagePath = ""
+    private var webLink = ""
+    private var noteId = -1
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        noteId = requireArguments().getInt("noteId",-1)
     }
 
     override fun onCreateView(
@@ -34,6 +42,24 @@ class CreateNoteFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        if(noteId != -1 ){
+            launch {
+                context?.let {
+                    var notes = NotesDatabase.getDatabase(it).noteDao().getSpecificNote(noteId)
+                    binding.apply {
+                        etNoteTitle.setText(notes.title)
+                        etNoteSubTitle.setText(notes.subTitle)
+                        etNoteDesc.setText(notes.noteText)
+                        layoutImage.visibility = View.GONE
+                        if(notes.imgPath != null) imgNote.visibility = View.VISIBLE
+
+                        tvWebLink.visibility = View.GONE
+                    }
+
+                }
+            }
+        }
 
         val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
         currentDate = sdf.format(Date())

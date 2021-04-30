@@ -19,7 +19,7 @@ class NotesAdapter() :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotesViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val binding = ItemRvNotesBinding.inflate(layoutInflater, parent, false)
-        return NotesViewHolder(binding)
+        return NotesViewHolder(binding,listener)
     }
 
     override fun getItemCount(): Int {
@@ -38,9 +38,12 @@ class NotesAdapter() :
         holder.bind(arrList[position])
     }
 
-    class NotesViewHolder( private val binding: ItemRvNotesBinding) : RecyclerView.ViewHolder(binding.root){
+    class NotesViewHolder( private val binding: ItemRvNotesBinding,private val listener: OnItemClickListener?) : RecyclerView.ViewHolder(binding.root){
         fun bind(notes: Notes) = with(binding) {
             setupValues(notes)
+            binding.cardView.setOnClickListener {
+                notes.id?.let { it1 -> listener?.onClicked(it1) }
+            }
         }
 
         private fun setupValues(notes: Notes) {
